@@ -37,3 +37,7 @@
 (sqrt 9)
 (sqrt 25)
 (sqrt 100)
+
+(check-equal? (round (sqrt 9)) 3.0)
+(check-equal? (round (sqrt 25)) 5.0)
+(check-equal? (round (sqrt 100)) 10.0)
