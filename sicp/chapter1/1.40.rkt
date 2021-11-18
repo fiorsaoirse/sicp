@@ -6,4 +6,4 @@
   (lambda (x) (+ (* x x x) (* a x x) (* b x) c))
 )
 
-((cubic 1 2 3) 4)
+(check-equal? ((cubic 1 2 3) 4) 91)
