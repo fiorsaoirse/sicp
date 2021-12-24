@@ -68,35 +68,6 @@
 )
 
 ; верхняя абстракция
-(define (decode bits tree)
-    (define (get-next-branch bit tree)
-        (cond ((= bit 0) (get-left-branch tree))
-              ((= bit 1) (get-right-branch tree))
-              (else (error "Бит может быть равен только 1 или 0, а это плохой бит!"))
-        )
-    )
-
-    (define (decode-inner bits current-branch)
-        (if (null? bits)
-            '()
-            (let (
-                    (next-branch (get-next-branch (car bits) current-branch))
-                 )
-                (if (leaf? next-branch)
-                    ; если нашли символ (пришли к листу), тогда добавляем символ в результат,
-                    ; далее обрабатываем оставшиеся биты
-                    (cons (symbol-leaf next-branch)
-                          (decode-inner (cdr bits) tree)
-                    )
-                    ; или идем дальше по веткам до тех пор, пока не найдем символ
-                    (decode-inner (cdr bits) next-branch)
-                )
-            )
-        )
-    )
-
-    (decode-inner bits tree)
-)
 
 (define (adjoin-set x set)
     (cond ((null? set) (list x))
@@ -122,6 +93,26 @@
     )
 )
 
+(define (generate-huffman-tree pairs)
+    (successive-merge (make-leaf-set pairs))
+)
+
+(define (successive-merge set)
+    ; т.к. первые два элемента у нас самые маленькие
+    ; просто их складываем в новый узел
+    (let (
+            (first (car set))
+            (second (cadr set))
+            (rest (cddr set))
+         )
+         
+        (if (null? rest)
+            (make-code-tree first second)
+            (successive-merge (adjoin-set (make-code-tree first second) rest))
+        )
+    )
+)
+
 (define sample-tree 
     (make-code-tree (make-leaf 'A 4)
                     (make-code-tree 
@@ -134,8 +125,6 @@
     )
 )
 
-(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+(define sample-pairs '((A 4) (B 2) (C 1) (D 1)))
 
-; должно быть сообщение ADABBCA
-
-(check-equal? (decode sample-message sample-tree) '(A D A B B C A))
+(check-equal? (generate-huffman-tree sample-pairs) sample-tree)

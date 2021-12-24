@@ -17,11 +17,11 @@
     (eq? (car tree) 'leaf)
 )
 
-(define (get-symbol x)
+(define (symbol-leaf x)
     (cadr x)
 )
 
-(define (get-weight x)
+(define (weight-leaf x)
     (caddr x)
 )
 
@@ -52,7 +52,7 @@
     (if (leaf? tree)
         ; если это листовой элемент возвращаем список, состоящий из 1 символа
         ; (список - чтобы списки можно было сложить)
-        (list (get-symbol tree))
+        (list (symbol-leaf tree))
         ; иначе дерево является набором листьев (уже посчитанным) - "дерево общего вида"
         (caddr tree)
     )
@@ -60,7 +60,9 @@
 
 (define (weight tree)
     (if (leaf? tree)
-        (get-weight tree)
+        ; вес самого листа
+        (weight-leaf tree)
+        ; сумма весов всех листьев
         (cadddr tree)
     )
 )
@@ -104,21 +106,22 @@
 (define (adjoin-set x set)
     (cond ((null? set) (list x))
           ((< (weight x) (weight (car set))) (cons x set))
-          (else (cons (car set))
+          (else (cons (car set)
                       (adjoin-set x (cdr set))
+                )
           )
     )
 )
 
-(define (make-list-set pairs)
+(define (make-leaf-set pairs)
     (if (null? pairs)
         '()
         (let ((current-pair (car pairs)))
             ; берем первую пару, делаем из нее лист "символ-вес" и кладем в список
             ; к уже обработанным парам (предыдущим, помним, что append тут у нас)
             ; вычисляет результат с конца!
-            (adjoin-set (make-leaf (car current-pair) (cdr current-pair))
-                        (make-list-set (cdr pairs))
+            (adjoin-set (make-leaf (car current-pair) (cadr current-pair))
+                        (make-leaf-set (cdr pairs))
             )
         )
     )
@@ -137,7 +140,5 @@
 )
 
 (define sample-message '(A D A B B C A))
-
-; должно быть сообщение ADABBCA
 
 (check-equal? (encode sample-message sample-tree) '(0 1 1 0 0 1 0 1 0 1 1 1 0))
