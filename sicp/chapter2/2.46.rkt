@@ -18,8 +18,8 @@
     (cdr vector)
 )
 
-; ---- the same level of the abstractions. but it 
-; ---- uses constructors and selectors instead of pairs
+; ---- upper level of the abstractions
+; ---- it uses constructors and selectors instead of pairs
 
 (define (add-vect vector1 vector2)
     (let (

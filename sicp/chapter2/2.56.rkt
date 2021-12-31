@@ -110,13 +110,6 @@
                     du-dx
                 )
             )
-            
-            (make-product 
-                (* (exponent exp) 
-                    (make-exponentiation)
-                )
-                (deriv (base exp) var)
-            )
           )
         (else
          (error "неизвестный тип выражения -- DERIV" exp))))

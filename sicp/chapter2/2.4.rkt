@@ -3,9 +3,11 @@
 (#%require rackunit)
 
 ; const cons = (x, y) => func => func(x, y)
+; в пару возвращает процедуру, которая получает другую процедуру и передает в нее
+; параметры (x и y)
 
 (define (cons x y)
-    (lambda (m) (m x y))
+    (lambda (fn) (fn x y))
 )
 
 ; const car = pair => pair((x, y) => x)
