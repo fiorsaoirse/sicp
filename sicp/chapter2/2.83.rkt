@@ -266,7 +266,7 @@
 ; (define (raise x) (apply-generic 'raise x)) 
   
 ;; добавляем в scheme-number пакет 
-;  (put 'raise 'integer  
+;  (put 'raise 'scheme-number  
 ;           (lambda (x) (make-rational x 1))) 
   
 ;; добавляем в rational пакет 
